@@ -1,0 +1,6 @@
+{
+  "name": "SwasthyaLink AI",
+  "description": "Enterprise-grade AI Agent dashboard for rural healthcare infrastructure deployment, symptom triage, facility routing, and log validation.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
