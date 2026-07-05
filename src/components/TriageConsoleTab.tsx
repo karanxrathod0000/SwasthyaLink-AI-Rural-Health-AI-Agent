@@ -428,7 +428,7 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
               
               {/* Triage result banner block */}
               {(() => {
-                const category = aiResult.triage.category;
+                const category = aiResult?.triage?.category || 'MEDIUM';
                 let bannerBg = 'bg-slate-600';
                 let bannerText = 'MEDIUM PRIORITY';
                 let alertColor = 'text-slate-700';
@@ -451,7 +451,20 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
                   bannerText = '🟢 LOW PRIORITY CASE';
                 }
 
-                const allocatedFacility = facilities.find(f => f.id === aiResult.triage.allocatedFacilityId) || facilities[0];
+                const defaultFacility: Facility = {
+                  id: 'SC-1',
+                  name: 'SubCenter Bhadrak',
+                  type: 'SubCenter',
+                  distanceKm: 2,
+                  coordinates: { lat: 20.8985, lng: 86.5123 },
+                  equipment: ['Digital Thermometer', 'Automated BP Monitor', 'Rapid Malaria Kits', 'Glucometer', 'First Aid Kit', 'Basic Oxygen Concentrator'],
+                  specializedStaff: ['ANM Srimati Lata (Auxiliary Nurse)', 'Community Health Officer (CHO)'],
+                  bedCapacity: { total: 5, occupied: 3 },
+                  activeDoctors: 1,
+                  status: 'FULL_OPERATIONAL',
+                  contactNo: '+91 6784-250101'
+                };
+                const allocatedFacility = (facilities && facilities.find(f => f.id === aiResult?.triage?.allocatedFacilityId)) || (facilities && facilities[0]) || defaultFacility;
 
                 return (
                   <div className="flex-1 flex flex-col justify-between">
@@ -498,7 +511,7 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
                             </span>
                             <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl">
                               <p className="text-xs text-slate-800 leading-relaxed font-sans font-medium">
-                                {aiResult.triage.recommendedAction}
+                                {aiResult?.triage?.recommendedAction || 'Keep patient stable and monitor vital signs.'}
                               </p>
                             </div>
                           </div>
@@ -509,7 +522,7 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
                               Clinical Reason & Parameters Map
                             </span>
                             <p className="text-xs text-slate-600 leading-relaxed font-sans">
-                              {aiResult.triage.clinicalReasoning}
+                              {aiResult?.triage?.clinicalReasoning || 'Symptom parameters logged for emergency evaluation.'}
                             </p>
                           </div>
 
@@ -531,13 +544,13 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
                                     Distance & ETA
                                   </span>
                                   <span className="text-xs font-mono font-bold text-medblue">
-                                    {allocatedFacility.distanceKm} km | Est. {Math.round(allocatedFacility.distanceKm * 1.5 + 4)} mins
+                                    {allocatedFacility.distanceKm || 2} km | Est. {Math.round((allocatedFacility.distanceKm || 2) * 1.5 + 4)} mins
                                   </span>
                                 </div>
                               </div>
 
                               <div className="border-t border-sky-100/50 pt-2 flex flex-wrap gap-1">
-                                {allocatedFacility.equipment.map(eq => (
+                                {(allocatedFacility.equipment || []).map(eq => (
                                   <span key={eq} className="bg-white border border-sky-100 text-sky-800 text-[9px] px-2 py-0.5 rounded font-mono">
                                     ✓ {eq}
                                   </span>
@@ -553,21 +566,23 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
                           <button
                             type="button"
                             onClick={() => {
-                              alert(`Simulated ASHA dispatch callback: Call placed to emergency dispatch node at ${allocatedFacility.contactNo || '108'}. Ambulance team briefed on oxygen saturation values.`);
+                              alert(`Simulated ASHA dispatch callback: Call placed to emergency dispatch node at ${allocatedFacility?.contactNo || '108'}. Ambulance team briefed on oxygen saturation values.`);
                               showToast('Ambulance dispatched instantly');
                             }}
-                            className="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-xs"
+                            className="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
                           >
                             <PhoneCall className="w-4 h-4" />
-                            <span>📞 Call Ambulance ({allocatedFacility.contactNo || '108'})</span>
+                            <span>📞 Call Ambulance ({allocatedFacility?.contactNo || '108'})</span>
                           </button>
                           
                           <button
                             type="button"
                             onClick={() => {
-                              alert(`Opening regional coordinate system map centering allocated node ${allocatedFacility.name} at coordinate points [${allocatedFacility.coordinates.lat}, ${allocatedFacility.coordinates.lng}].`);
+                              const lat = allocatedFacility?.coordinates?.lat || 20.8985;
+                              const lng = allocatedFacility?.coordinates?.lng || 86.5123;
+                              alert(`Opening regional coordinate system map centering allocated node ${allocatedFacility?.name || 'SubCenter Bhadrak'} at coordinate points [${lat}, ${lng}].`);
                             }}
-                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1"
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1 cursor-pointer"
                           >
                             <Compass className="w-4 h-4 text-slate-500" />
                             <span>📍 View Route Map</span>
