@@ -18,18 +18,26 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+const DEMO_USER: AuthUser = {
+  id: 'user-admin-demo',
+  name: 'Dr. Karan Rathod (Demo Admin)',
+  email: 'demo@swasthyalink.com',
+  role: 'Admin'
+};
 
-  // On mount, restore session via /api/auth/me using dual auth (cookie + localStorage bearer token)
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AuthUser | null>(DEMO_USER);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // On mount, verify with backend or stay in demo mode
   useEffect(() => {
     apiFetch('/api/auth/me')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data?.user) setUser(data.user);
+        else setUser(DEMO_USER);
       })
-      .catch(() => {})
+      .catch(() => setUser(DEMO_USER))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -72,7 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
     localStorage.removeItem('swasthya_token');
-    setUser(null);
+    setUser(DEMO_USER);
+    window.location.href = '/dashboard';
   };
 
   return (

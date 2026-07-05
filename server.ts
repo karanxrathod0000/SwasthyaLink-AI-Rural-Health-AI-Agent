@@ -352,52 +352,32 @@ getDB();
 const JWT_SECRET = process.env.JWT_SECRET || 'swasthyalink_dev_secret';
 const IS_PROD = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
 
-const authenticate = (req: any, res: any, next: any) => {
-  const token = req.cookies?.token || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
-  if (!token) return res.status(401).json({ error: 'Missing token' });
-  try {
-    const payload = jwt.verify(token, JWT_SECRET);
-    req.user = payload;
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: 'Invalid token' });
-  }
+const DEMO_USER = {
+  id: 'user-admin-demo',
+  name: 'Dr. Karan Rathod (Demo Admin)',
+  email: 'demo@swasthyalink.com',
+  role: 'Admin'
 };
 
-const requireRole = (role: string) => (req: any, res: any, next: any) => {
-  if (req.user?.role !== role) return res.status(403).json({ error: 'Forbidden' });
+const authenticate = (req: any, res: any, next: any) => {
+  // 🔬 DEMO MODE: Bypass auth completely and attach demo admin user
+  req.user = DEMO_USER;
   next();
 };
 
-// --- AUTH ROUTES (public) ---
+const requireRole = (role: string) => (req: any, res: any, next: any) => {
+  // 🔬 DEMO MODE: Allow all role checks
+  next();
+};
+
+// --- AUTH ROUTES (public / demo mode) ---
 
 app.post('/api/auth/register', async (req: any, res: any) => {
-  const { name, email, password, role } = req.body;
-  if (!name || !email || !password || !role) return res.status(400).json({ error: 'Missing fields' });
-  const validRoles = ['Admin', 'PHC-Staff', 'ASHA-Worker'];
-  if (!validRoles.includes(role)) return res.status(400).json({ error: 'Invalid role' });
-  const db = getDB();
-  if (db.users.find((u: any) => u.email === email)) return res.status(409).json({ error: 'User already exists' });
-  const passwordHash = await bcrypt.hash(password, 10);
-  const newUser = { id: `user-${Date.now()}`, name, email, passwordHash, role };
-  db.users.push(newUser);
-  saveDB(db);
-  const token = jwt.sign({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }, JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
-  res.status(201).json({ message: 'User registered successfully', token, user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } });
+  res.status(201).json({ success: true, message: 'Registered (Demo Mode)', token: 'demo-token', user: DEMO_USER });
 });
 
 app.post('/api/auth/login', async (req: any, res: any) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Missing fields' });
-  const db = getDB();
-  const user = db.users.find((u: any) => u.email === email);
-  if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-  const match = await bcrypt.compare(password, user.passwordHash);
-  if (!match) return res.status(401).json({ error: 'Invalid credentials' });
-  const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
-  res.json({ message: 'Logged in', token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  res.json({ success: true, message: 'Logged in (Demo Mode)', token: 'demo-token', user: DEMO_USER });
 });
 
 app.post('/api/auth/logout', (req: any, res: any) => {
@@ -405,15 +385,15 @@ app.post('/api/auth/logout', (req: any, res: any) => {
   res.json({ message: 'Logged out' });
 });
 
-app.get('/api/auth/me', authenticate, (req: any, res: any) => {
-  res.json({ user: req.user });
+app.get('/api/auth/me', (req: any, res: any) => {
+  res.json({ success: true, user: DEMO_USER });
 });
 
 // --- PROTECT ALL /api ROUTES EXCEPT /api/auth/* ---
 
 app.use('/api', (req: any, res: any, next: any) => {
-  if (req.path.startsWith('/auth')) return next();
-  authenticate(req, res, next);
+  req.user = DEMO_USER;
+  next();
 });
 
 // --- API ENDPOINTS ---

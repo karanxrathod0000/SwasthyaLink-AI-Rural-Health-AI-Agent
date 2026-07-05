@@ -74,6 +74,23 @@ export default function SignupPage() {
         </div>
 
         <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: 36 }}>
+          {/* 🔬 DEMO NOTE */}
+          <div style={{ background: 'linear-gradient(135deg, rgba(13,148,136,0.2), rgba(16,185,129,0.15))', border: '1px solid rgba(13,148,136,0.4)', borderRadius: 12, padding: '16px', marginBottom: 22, textAlign: 'center' }}>
+            <p style={{ color: '#5EEAD4', fontSize: 13, fontWeight: 700, margin: '0 0 10px 0', display: 'flex', alignItems: 'center', justify: 'center', gap: 6 }}>
+              <span>🔬</span> Demo Mode — Build with AI Hackathon
+            </p>
+            <p style={{ color: '#94A3B8', fontSize: 12, margin: '0 0 14px 0', lineHeight: '1.4' }}>
+              Authentication is bypassed for immediate judge evaluation. All 11 modules and AI agents are pre-configured.
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              style={{ background: '#0D9488', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(13,148,136,0.3)', transition: 'transform 0.15s' }}
+            >
+              🚀 Launch Instant Demo (No Login Required)
+            </button>
+          </div>
+
           {error && (
             <div style={{ background: 'rgba(220,38,38,0.1)', border: '1px solid rgba(220,38,38,0.25)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10, color: '#FCA5A5', fontSize: 14 }}>
               <AlertCircle size={16} style={{ flexShrink: 0 }} />

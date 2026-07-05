@@ -37,30 +37,14 @@ import { UserX } from 'lucide-react';
 // ─── Protected Route Guard ───────────────────────────────────────────────────
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ width: 40, height: 40, border: '3px solid rgba(255,255,255,0.1)', borderTopColor: '#0D9488', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
-          <p style={{ color: '#475569', fontSize: 13, fontFamily: '"JetBrains Mono", monospace' }}>Authenticating session...</p>
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
-
-  if (!user) return <Navigate to="/login" replace />;
+  // 🔬 DEMO MODE: Allow unrestricted access without checking user credentials
   return <>{children}</>;
 }
 
 // ─── Public Route Guard (redirect to dashboard if already logged in) ─────────
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
-  if (isLoading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
+  // 🔬 DEMO MODE: Allow unrestricted access to public/demo pages
   return <>{children}</>;
 }
 
@@ -324,17 +308,18 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Public */}
-          <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-          <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+          {/* Public / Demo */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
 
-          {/* Protected */}
-          <Route path="/select-service" element={<ProtectedRoute><ServiceSelection /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute><DashboardShell /></ProtectedRoute>} />
+          {/* Protected (Demo Mode Allowed) */}
+          <Route path="/select-service" element={<ServiceSelection />} />
+          <Route path="/dashboard" element={<DashboardShell />} />
 
           {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
