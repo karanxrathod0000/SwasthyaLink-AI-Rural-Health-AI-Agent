@@ -2,7 +2,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import fs from 'fs';
-import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -18,7 +17,7 @@ if (!apiKey) {
 
 // Initialize GoogleGenAI SDK
 const ai = new GoogleGenAI({
-  apiKey: apiKey,
+  apiKey: apiKey || 'dummy-gemini-api-key-for-demo',
   httpOptions: {
     headers: {
       'User-Agent': 'aistudio-build',
@@ -289,7 +288,14 @@ let cachedDB: DataStore | null = null;
 function getDB(): DataStore {
   if (cachedDB) return cachedDB;
   try {
-    const pathToRead = fs.existsSync(TMP_STORE_PATH) ? TMP_STORE_PATH : (fs.existsSync(STORE_PATH) ? STORE_PATH : null);
+    const possiblePaths = [
+      TMP_STORE_PATH,
+      STORE_PATH,
+      path.join(process.cwd(), 'data-store.json'),
+      path.join(process.cwd(), '..', 'data-store.json'),
+      path.resolve('data-store.json')
+    ];
+    const pathToRead = possiblePaths.find(p => fs.existsSync(p));
     if (pathToRead) {
       const data = fs.readFileSync(pathToRead, 'utf-8');
       const db = JSON.parse(data);
@@ -335,8 +341,9 @@ function getDB(): DataStore {
 function saveDB(db: DataStore) {
   cachedDB = db;
   try {
-    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV) {
       try { fs.writeFileSync(TMP_STORE_PATH, JSON.stringify(db, null, 2), 'utf-8'); } catch (e) {}
+      return;
     }
     fs.writeFileSync(STORE_PATH, JSON.stringify(db, null, 2), 'utf-8');
   } catch (err) {
@@ -1304,7 +1311,8 @@ app.get('/api/admin/performance', async (req, res) => {
 
 // Initialize Vite server for asset handling
 async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
