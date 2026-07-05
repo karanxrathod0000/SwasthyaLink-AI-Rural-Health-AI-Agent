@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { apiFetch } from '../utils/api';
 
 export interface AuthUser {
   id: string;
@@ -21,9 +22,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // On mount, try to restore session from the HttpOnly cookie via /api/auth/me
+  // On mount, restore session via /api/auth/me using dual auth (cookie + localStorage bearer token)
   useEffect(() => {
-    fetch('/api/auth/me', { credentials: 'include' })
+    apiFetch('/api/auth/me')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data?.user) setUser(data.user);
@@ -33,14 +34,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string): Promise<{ error?: string }> => {
-    const res = await fetch('/api/auth/login', {
+    const res = await apiFetch('/api/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
     if (!res.ok) return { error: data.error || 'Login failed' };
+    if (data.token) {
+      localStorage.setItem('swasthya_token', data.token);
+    }
     setUser(data.user);
     return {};
   };
@@ -51,20 +53,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     role: AuthUser['role']
   ): Promise<{ error?: string }> => {
-    const res = await fetch('/api/auth/register', {
+    const res = await apiFetch('/api/auth/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ name, email, password, role }),
     });
     const data = await res.json();
     if (!res.ok) return { error: data.error || 'Registration failed' };
-    // Auto-login after signup
+    if (data.token) {
+      localStorage.setItem('swasthya_token', data.token);
+    }
+    if (data.user) {
+      setUser(data.user);
+      return {};
+    }
     return login(email, password);
   };
 
   const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+    localStorage.removeItem('swasthya_token');
     setUser(null);
   };
 

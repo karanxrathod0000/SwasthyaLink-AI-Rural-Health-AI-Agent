@@ -23,10 +23,13 @@ import {
   Bed,
   FlaskConical,
   UserCheck,
-  ClipboardList
+  ClipboardList,
+  HelpCircle
 } from 'lucide-react';
 import { EmergencyAlert, Facility, TriageResult } from '../types';
 import { useAuth } from '../context/AuthContext';
+import WelcomeModal from './WelcomeModal';
+import HelpModal from './HelpModal';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -54,6 +57,14 @@ export default function MainLayout({
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [welcomeOpen, setWelcomeOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem('swasthya_has_seen_welcome')) {
+      setWelcomeOpen(true);
+    }
+  }, []);
 
   const handleLogout = async () => {
     setProfileOpen(false);
@@ -163,6 +174,19 @@ export default function MainLayout({
               className="md:hidden p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-800 transition"
             >
               <Search className="w-5 h-5" />
+            </button>
+
+            {/* Help & Support Button */}
+            <button
+              onClick={() => {
+                setHelpOpen(true);
+                setNotificationOpen(false);
+                setProfileOpen(false);
+              }}
+              className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-800 transition"
+              title="Help & AI Documentation"
+            >
+              <HelpCircle className="w-5 h-5 text-emerald-600" />
             </button>
 
             {/* Notification Bell Dropdown */}
@@ -480,6 +504,18 @@ export default function MainLayout({
           </div>
         </div>
       )}
+
+      {/* Onboarding & Help Modals */}
+      <WelcomeModal
+        isOpen={welcomeOpen}
+        onClose={() => setWelcomeOpen(false)}
+        onLoadDemoData={() => window.location.reload()}
+      />
+      <HelpModal
+        isOpen={helpOpen}
+        onClose={() => setHelpOpen(false)}
+        onReopenTour={() => { setHelpOpen(false); setWelcomeOpen(true); }}
+      />
 
     </div>
   );

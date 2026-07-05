@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserCheck, ShieldAlert, AlertCircle, Sparkles, MapPin, RefreshCw, ClipboardList, CheckCircle } from 'lucide-react';
 import { AttendanceLog, LogAnomaly } from '../types';
+import { apiFetch } from '../utils/api';
 
 interface AttendanceLogAuditorProps {
   logs: AttendanceLog[];
@@ -70,9 +71,8 @@ export default function AttendanceLogAuditor({ logs, anomalies, onLogValidated, 
     setValidationResult(null);
 
     try {
-      const response = await fetch('/api/logs/validate', {
+      const response = await apiFetch('/api/logs/validate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           workerId,
           workerName,

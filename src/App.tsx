@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useSearchParams } 
 
 // Auth
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { apiFetch as globalApiFetch } from './utils/api';
 
 // Pages
 import LandingPage from './components/LandingPage';
@@ -123,7 +124,7 @@ function DashboardShell() {
         '/api/admin/redistribution', '/api/admin/performance'
       ];
 
-      const responses = await Promise.all(endpoints.map(ep => fetch(ep, { credentials: 'include' })));
+      const responses = await Promise.all(endpoints.map(ep => globalApiFetch(ep)));
 
       // If we get a 401, our session expired — redirect to login
       if (responses.some(r => r.status === 401)) {
@@ -155,10 +156,8 @@ function DashboardShell() {
 
   // ── Mutation handlers ────────────────────────────────────────────────────
   const apiFetch = async (url: string, method = 'POST', body?: any) => {
-    const res = await fetch(url, {
+    const res = await globalApiFetch(url, {
       method,
-      credentials: 'include',
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
     });
     if (res.status === 401) { await logout(); navigate('/login'); }

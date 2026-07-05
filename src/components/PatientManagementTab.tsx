@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { apiFetch } from '../utils/api';
 import { 
   Users, 
   MapPin, 
@@ -59,10 +60,8 @@ export default function PatientManagementTab({
     setLoading(true);
 
     try {
-      const response = await fetch('/api/logs/validate', {
+      const response = await apiFetch('/api/logs/validate', {
         method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           workerId,
           workerName,

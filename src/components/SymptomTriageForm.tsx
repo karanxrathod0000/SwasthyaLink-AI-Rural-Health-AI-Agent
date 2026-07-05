@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, ShieldAlert, Heart, RefreshCw, Send, CheckCircle2 } from 'lucide-react';
 import { Vitals, PatientDetails, TriageResult } from '../types';
+import { apiFetch } from '../utils/api';
 
 interface SymptomTriageFormProps {
   onTriageCreated: (triage: TriageResult, requirement: string) => void;
@@ -98,10 +99,8 @@ export default function SymptomTriageForm({ onTriageCreated, facilities }: Sympt
     };
 
     try {
-      const response = await fetch('/api/triage', {
+      const response = await apiFetch('/api/triage', {
         method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           symptoms,
           vitals: vitalsData,

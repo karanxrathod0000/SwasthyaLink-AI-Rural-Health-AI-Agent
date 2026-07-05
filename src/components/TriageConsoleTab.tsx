@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { apiFetch } from '../utils/api';
 import { 
   Activity, 
   User, 
@@ -87,10 +88,8 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
     setAiResult(null);
 
     try {
-      const response = await fetch('/api/triage', {
+      const response = await apiFetch('/api/triage', {
         method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           symptoms,
           vitals: {

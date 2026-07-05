@@ -352,8 +352,9 @@ app.post('/api/auth/register', async (req: any, res: any) => {
   const passwordHash = await bcrypt.hash(password, 10);
   const newUser = { id: `user-${Date.now()}`, name, email, passwordHash, role };
   db.users.push(newUser);
-  saveDB(db);
-  res.status(201).json({ message: 'User registered successfully' });
+  const token = jwt.sign({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }, JWT_SECRET, { expiresIn: '8h' });
+  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 });
+  res.status(201).json({ message: 'User registered successfully', token, user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } });
 });
 
 app.post('/api/auth/login', async (req: any, res: any) => {
@@ -365,8 +366,8 @@ app.post('/api/auth/login', async (req: any, res: any) => {
   const match = await bcrypt.compare(password, user.passwordHash);
   if (!match) return res.status(401).json({ error: 'Invalid credentials' });
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '8h' });
-  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: IS_PROD ? 'strict' : 'lax', maxAge: 8 * 60 * 60 * 1000 });
-  res.json({ message: 'Logged in', user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 });
+  res.json({ message: 'Logged in', token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 
 app.post('/api/auth/logout', (req: any, res: any) => {
