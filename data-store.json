@@ -1,0 +1,725 @@
+{
+  "facilities": [
+    {
+      "id": "SC-1",
+      "name": "SubCenter Bhadrak",
+      "type": "SubCenter",
+      "distanceKm": 2,
+      "coordinates": {
+        "lat": 20.8985,
+        "lng": 86.5123
+      },
+      "equipment": [
+        "Digital Thermometer",
+        "Automated BP Monitor",
+        "Rapid Malaria Kits",
+        "Glucometer",
+        "First Aid Kit",
+        "Basic Oxygen Concentrator"
+      ],
+      "specializedStaff": [
+        "ANM Srimati Lata (Auxiliary Nurse)",
+        "Community Health Officer (CHO)"
+      ],
+      "bedCapacity": {
+        "total": 5,
+        "occupied": 3
+      },
+      "activeDoctors": 1,
+      "status": "FULL_OPERATIONAL",
+      "contactNo": "+91 6784-250101"
+    },
+    {
+      "id": "SC-2",
+      "name": "SubCenter Dhamnagar",
+      "type": "SubCenter",
+      "distanceKm": 15,
+      "coordinates": {
+        "lat": 20.8124,
+        "lng": 86.4356
+      },
+      "equipment": [
+        "Manual BP Cuff",
+        "Digital Thermometer",
+        "Rapid Diagnostic Kits",
+        "Nebulizer"
+      ],
+      "specializedStaff": [
+        "ANM Gita Rani (Auxiliary Nurse)"
+      ],
+      "bedCapacity": {
+        "total": 2,
+        "occupied": 2
+      },
+      "activeDoctors": 0,
+      "status": "LIMITED_SERVICE",
+      "contactNo": "+91 6784-250102"
+    },
+    {
+      "id": "CHC-1",
+      "name": "Community Health Center (CHC) Dhamnagar",
+      "type": "CHC",
+      "distanceKm": 11,
+      "coordinates": {
+        "lat": 20.819,
+        "lng": 86.442
+      },
+      "equipment": [
+        "Active Ultrasound Unit",
+        "Maternity Labor Room Suite",
+        "Semi-Auto Biochem Analyzer",
+        "20L Oxygen Concentrators",
+        "Infant Warmer",
+        "X-Ray Machine"
+      ],
+      "specializedStaff": [
+        "Gynecologist (Dr. A. K. Sahoo)",
+        "Pediatrician (Dr. R. K. Patra)",
+        "General Physician (Dr. B. Das)",
+        "Staff Nurses (4)"
+      ],
+      "bedCapacity": {
+        "total": 30,
+        "occupied": 18
+      },
+      "activeDoctors": 3,
+      "status": "FULL_OPERATIONAL",
+      "contactNo": "+91 6784-253450"
+    },
+    {
+      "id": "DH-1",
+      "name": "District Hospital Bhadrak",
+      "type": "DistrictHospital",
+      "distanceKm": 22,
+      "coordinates": {
+        "lat": 20.9022,
+        "lng": 86.5215
+      },
+      "equipment": [
+        "Cardiac Care ICU (CCU)",
+        "Pediatric ICU (PICU)",
+        "Fully Equipped Blood Bank",
+        "3D Ultrasound & MRI Scan",
+        "Advanced Ventilators",
+        "Trauma Surgical Theatre"
+      ],
+      "specializedStaff": [
+        "Chief Cardiologist (Dr. S. Mohanty)",
+        "Senior Obstetrician (Dr. M. Nayak)",
+        "Emergency Medicine Specialist",
+        "Anesthetists (2)",
+        "Specialist Surgeons (3)",
+        "ICU Nurses (12)"
+      ],
+      "bedCapacity": {
+        "total": 200,
+        "occupied": 142
+      },
+      "activeDoctors": 18,
+      "status": "CRITICAL_LOAD",
+      "contactNo": "+91 6784-261200"
+    }
+  ],
+  "logs": [
+    {
+      "id": "LOG-1",
+      "workerId": "ASHA_ID-401",
+      "workerName": "Rashmi Prava Mallick",
+      "locationNode": "SubCenter Bhadrak",
+      "timestamp": "2026-07-05T04:33:54.186Z",
+      "status": "ACTIVE",
+      "notes": "Checked blood pressure for elderly patient at SC-1. BP 130/85. Advised reduced salt intake.",
+      "geofenceVerified": true
+    },
+    {
+      "id": "LOG-2",
+      "workerId": "ASHA_ID-402",
+      "workerName": "Subhasini Sahu",
+      "locationNode": "SubCenter Dhamnagar",
+      "timestamp": "2026-07-05T06:33:54.187Z",
+      "status": "ACTIVE",
+      "notes": "Conducted home visits in Dhamnagar outer ward. Met with young mother to advise on newborn vaccination timelines.",
+      "geofenceVerified": true
+    }
+  ],
+  "triageRecords": [
+    {
+      "id": "TRI-1783242437519",
+      "patientAge": 30,
+      "patientGender": "F",
+      "pregnancyStatus": "NO",
+      "symptoms": "Chest Pain",
+      "vitals": {
+        "pulse": 75,
+        "temp": 98.6,
+        "bloodPressure": "120/80",
+        "respiratoryRate": 16,
+        "oxygenSat": 98
+      },
+      "category": "MEDIUM",
+      "clinicalReasoning": "Standard fallback logic used. Patient exhibits symptomatic parameters that require scheduled evaluation.",
+      "recommendedAction": "Schedule a visit to the local SubCenter. Monitor vitals daily. Report any escalation of symptoms immediately.",
+      "timestamp": "2026-07-05T09:07:17.519Z",
+      "allocatedFacilityId": "SC-1",
+      "isSyncedToFirebase": true
+    },
+    {
+      "id": "TRI-1783242424574",
+      "patientAge": 23,
+      "patientGender": "M",
+      "pregnancyStatus": "NOT_APPLICABLE",
+      "symptoms": "Fever, Chest Pain, Fatigue",
+      "vitals": {
+        "pulse": 75,
+        "temp": 98.6,
+        "bloodPressure": "120/80",
+        "respiratoryRate": 16,
+        "oxygenSat": 98
+      },
+      "category": "MEDIUM",
+      "clinicalReasoning": "Standard fallback logic used. Patient exhibits symptomatic parameters that require scheduled evaluation.",
+      "recommendedAction": "Schedule a visit to the local SubCenter. Monitor vitals daily. Report any escalation of symptoms immediately.",
+      "timestamp": "2026-07-05T09:07:04.574Z",
+      "allocatedFacilityId": "SC-1",
+      "isSyncedToFirebase": true
+    },
+    {
+      "id": "TRI-1783240841268",
+      "patientAge": 4,
+      "patientGender": "Other",
+      "pregnancyStatus": "NO",
+      "symptoms": "Severe pediatric case presenting with acute dehydration and severe diarrhea.",
+      "vitals": {
+        "pulse": 110,
+        "temp": 101.4,
+        "bloodPressure": "80/50",
+        "respiratoryRate": 28,
+        "oxygenSat": 88
+      },
+      "category": "MEDIUM",
+      "clinicalReasoning": "Standard fallback logic used. Patient exhibits symptomatic parameters that require scheduled evaluation.",
+      "recommendedAction": "Schedule a visit to the local SubCenter. Monitor vitals daily. Report any escalation of symptoms immediately.",
+      "timestamp": "2026-07-05T08:40:41.268Z",
+      "allocatedFacilityId": "SC-1",
+      "isSyncedToFirebase": true
+    },
+    {
+      "id": "TRI-1",
+      "patientAge": 28,
+      "patientGender": "F",
+      "pregnancyStatus": "YES",
+      "symptoms": "Patient is at 32 weeks gestation, reporting persistent lower abdominal cramping and mild vaginal spotting. Vitals are elevated.",
+      "vitals": {
+        "pulse": 98,
+        "temp": 99.1,
+        "bloodPressure": "135/88",
+        "respiratoryRate": 20,
+        "oxygenSat": 98
+      },
+      "category": "HIGH",
+      "clinicalReasoning": "Maternal spotting at 32 weeks is a significant preterm labor threat. Combined with elevated BP and pulse, this requires immediate fetal and maternal monitoring.",
+      "recommendedAction": "Prepare for immediate transport to CHC Dhamnagar. Advise patient to remain left-lateral recumbent during transit. Maintain vitals log.",
+      "timestamp": "2026-07-05T05:33:54.187Z",
+      "allocatedFacilityId": "CHC-1",
+      "isSyncedToFirebase": true
+    }
+  ],
+  "anomalies": [
+    {
+      "id": "ANOM-1",
+      "logId": "LOG-2",
+      "workerId": "ASHA_ID-402",
+      "timestamp": "2026-07-05T06:33:54.187Z",
+      "anomalyType": "SPATIAL_DISCREPANCY",
+      "severity": "WARNING",
+      "description": "Check-in registered at SubCenter Dhamnagar, but activities description states worker spent the entire shift at Jamujhadi village (12km away) without active commute logs.",
+      "resolved": false
+    }
+  ],
+  "alerts": [
+    {
+      "id": "ALERT-1",
+      "triageId": "TRI-1",
+      "workerId": "ASHA_ID-402",
+      "locationNode": "SubCenter Dhamnagar",
+      "patientBrief": "28F, 32W Pregnant, severe abdominal cramping + spotting.",
+      "category": "HIGH",
+      "nearestFacilityId": "CHC-1",
+      "timestamp": "2026-07-05T05:33:54.187Z",
+      "status": "ACKNOWLEDGED"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "inv-1",
+      "facilityId": "SC-1",
+      "name": "Paracetamol 500mg",
+      "category": "essential",
+      "currentStock": 500,
+      "minimumThreshold": 50,
+      "maximumThreshold": 500,
+      "unit": "tablets",
+      "batchNumber": "P-9982",
+      "expiryDate": "2026-08-15",
+      "supplier": "Kalinga Med Distrib",
+      "lastRestocked": "2026-07-05"
+    },
+    {
+      "id": "inv-2",
+      "facilityId": "SC-1",
+      "name": "Amoxicillin 250mg",
+      "category": "critical",
+      "currentStock": 200,
+      "minimumThreshold": 20,
+      "maximumThreshold": 200,
+      "unit": "capsules",
+      "batchNumber": "A-1082",
+      "expiryDate": "2026-11-20",
+      "supplier": "Utkal Pharma Ltd",
+      "lastRestocked": "2026-07-05"
+    },
+    {
+      "id": "inv-3",
+      "facilityId": "SC-1",
+      "name": "ORS Packets",
+      "category": "essential",
+      "currentStock": 300,
+      "minimumThreshold": 30,
+      "maximumThreshold": 300,
+      "unit": "packets",
+      "batchNumber": "O-2021",
+      "expiryDate": "2026-07-20",
+      "supplier": "National Health Depot",
+      "lastRestocked": "2026-07-05"
+    },
+    {
+      "id": "inv-4",
+      "facilityId": "SC-1",
+      "name": "Sterile Gloves (Size 7)",
+      "category": "general",
+      "currentStock": 200,
+      "minimumThreshold": 100,
+      "maximumThreshold": 1000,
+      "unit": "vials",
+      "batchNumber": "G-8811",
+      "expiryDate": "2027-01-10",
+      "supplier": "SurgeTech Supplies",
+      "lastRestocked": "2026-06-15"
+    },
+    {
+      "id": "inv-5",
+      "facilityId": "SC-1",
+      "name": "Disposable Syringes 5ml",
+      "category": "general",
+      "currentStock": 150,
+      "minimumThreshold": 50,
+      "maximumThreshold": 500,
+      "unit": "tablets",
+      "batchNumber": "S-7762",
+      "expiryDate": "2026-12-01",
+      "supplier": "SurgeTech Supplies",
+      "lastRestocked": "2026-06-15"
+    },
+    {
+      "id": "inv-6",
+      "facilityId": "SC-1",
+      "name": "Normal Saline (IV 500ml)",
+      "category": "essential",
+      "currentStock": 30,
+      "minimumThreshold": 20,
+      "maximumThreshold": 100,
+      "unit": "bottles",
+      "batchNumber": "NS-921",
+      "expiryDate": "2026-09-01",
+      "supplier": "Kalinga Med Distrib",
+      "lastRestocked": "2026-05-20"
+    },
+    {
+      "id": "inv-7",
+      "facilityId": "SC-2",
+      "name": "Paracetamol 500mg",
+      "category": "essential",
+      "currentStock": 450,
+      "minimumThreshold": 50,
+      "maximumThreshold": 500,
+      "unit": "tablets",
+      "batchNumber": "P-9982",
+      "expiryDate": "2026-08-15",
+      "supplier": "Kalinga Med Distrib",
+      "lastRestocked": "2026-06-01"
+    },
+    {
+      "id": "inv-8",
+      "facilityId": "SC-2",
+      "name": "ORS Packets",
+      "category": "essential",
+      "currentStock": 250,
+      "minimumThreshold": 30,
+      "maximumThreshold": 300,
+      "unit": "packets",
+      "batchNumber": "O-2021",
+      "expiryDate": "2026-07-20",
+      "supplier": "National Health Depot",
+      "lastRestocked": "2026-06-10"
+    }
+  ],
+  "patients": [
+    {
+      "id": "pat-1783240694015",
+      "registrationTime": "2026-07-05T08:38:14.015Z",
+      "facilityId": "SC-1",
+      "name": "Test Patient",
+      "age": 30,
+      "gender": "F",
+      "contact": "+91 99999-99999",
+      "department": "general",
+      "visitType": "OPD",
+      "triagePriority": "routine",
+      "status": "waiting"
+    },
+    {
+      "id": "pat-1",
+      "facilityId": "SC-1",
+      "name": "Ram Sahoo",
+      "age": 42,
+      "gender": "M",
+      "contact": "+91 94371-29182",
+      "department": "general",
+      "visitType": "OPD",
+      "triagePriority": "routine",
+      "registrationTime": "2026-07-05T07:33:54.187Z",
+      "status": "with_doctor"
+    },
+    {
+      "id": "pat-2",
+      "facilityId": "SC-1",
+      "name": "Priya Mishra",
+      "age": 24,
+      "gender": "F",
+      "contact": "+91 98610-82731",
+      "department": "gynecology",
+      "visitType": "OPD",
+      "triagePriority": "urgent",
+      "registrationTime": "2026-07-05T08:03:54.187Z",
+      "status": "with_doctor"
+    },
+    {
+      "id": "pat-3",
+      "facilityId": "SC-1",
+      "name": "Amit Kumar",
+      "age": 8,
+      "gender": "Other",
+      "contact": "+91 99388-12938",
+      "department": "pediatrics",
+      "visitType": "OPD",
+      "triagePriority": "routine",
+      "registrationTime": "2026-07-05T08:18:54.187Z",
+      "status": "waiting"
+    }
+  ],
+  "beds": [
+    {
+      "id": "bed-1",
+      "facilityId": "SC-1",
+      "department": "general",
+      "bedNumber": "G-101",
+      "status": "occupied",
+      "occupiedBy": "Harish Chandra Jena",
+      "occupiedSince": "2026-07-03T08:33:54.187Z",
+      "expectedDischarge": "2026-07-06T08:33:54.187Z"
+    },
+    {
+      "id": "bed-2",
+      "facilityId": "SC-1",
+      "department": "general",
+      "bedNumber": "G-102",
+      "status": "occupied",
+      "occupiedBy": "Minati Mahapatra",
+      "occupiedSince": "2026-07-04T08:33:54.187Z",
+      "expectedDischarge": "2026-07-07T08:33:54.187Z"
+    },
+    {
+      "id": "bed-3",
+      "facilityId": "SC-1",
+      "department": "maternity",
+      "bedNumber": "M-201",
+      "status": "occupied",
+      "occupiedBy": "Saraswati Mohanty",
+      "occupiedSince": "2026-07-05T04:33:54.187Z",
+      "expectedDischarge": "2026-07-08T08:33:54.187Z"
+    },
+    {
+      "id": "bed-4",
+      "facilityId": "SC-1",
+      "department": "maternity",
+      "bedNumber": "M-202",
+      "status": "available"
+    },
+    {
+      "id": "bed-5",
+      "facilityId": "SC-1",
+      "department": "pediatric",
+      "bedNumber": "P-301",
+      "status": "available"
+    },
+    {
+      "id": "bed-6",
+      "facilityId": "SC-2",
+      "department": "general",
+      "bedNumber": "DG-101",
+      "status": "occupied",
+      "occupiedBy": "Ganesh Sahoo",
+      "occupiedSince": "2026-07-04T08:33:54.187Z"
+    },
+    {
+      "id": "bed-7",
+      "facilityId": "SC-2",
+      "department": "general",
+      "bedNumber": "DG-102",
+      "status": "occupied",
+      "occupiedBy": "Niranjan Barik",
+      "occupiedSince": "2026-07-05T08:33:54.187Z"
+    }
+  ],
+  "doctors": [
+    {
+      "id": "doc-1",
+      "name": "Dr. Ramesh Sharma",
+      "department": "general",
+      "facilityId": "SC-1",
+      "specialization": "General Medicine",
+      "contact": "+91 94372-88121",
+      "workingDays": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+      ]
+    },
+    {
+      "id": "doc-2",
+      "name": "Dr. Anita Gupta",
+      "department": "gynecology",
+      "facilityId": "CHC-1",
+      "specialization": "Maternal Care / OBGYN",
+      "contact": "+91 99371-22918",
+      "workingDays": [
+        "monday",
+        "wednesday",
+        "friday"
+      ]
+    },
+    {
+      "id": "doc-3",
+      "name": "Dr. Rabindra Reddy",
+      "department": "pediatrics",
+      "facilityId": "CHC-1",
+      "specialization": "Neonatology / Child Specialist",
+      "contact": "+91 98610-33291",
+      "workingDays": [
+        "tuesday",
+        "thursday",
+        "saturday"
+      ]
+    },
+    {
+      "id": "doc-4",
+      "name": "Dr. Bikram Singh",
+      "department": "surgery",
+      "facilityId": "DH-1",
+      "specialization": "Orthopedic Surgery",
+      "contact": "+91 99388-77182",
+      "workingDays": [
+        "monday",
+        "wednesday",
+        "friday"
+      ]
+    },
+    {
+      "id": "doc-5",
+      "name": "Dr. Priyabrata Patel",
+      "department": "dental",
+      "facilityId": "SC-1",
+      "specialization": "General Dentistry",
+      "contact": "+91 94379-11029",
+      "workingDays": [
+        "tuesday",
+        "thursday"
+      ]
+    }
+  ],
+  "doctorAttendance": [
+    {
+      "id": "att-1",
+      "doctorId": "doc-1",
+      "facilityId": "SC-1",
+      "date": "2026-07-05",
+      "status": "present",
+      "checkIn": "2026-07-05T05:33:54.187Z",
+      "patientsSeen": 14
+    }
+  ],
+  "leaveRequests": [
+    {
+      "id": "leave-1",
+      "doctorId": "doc-5",
+      "doctorName": "Dr. Priyabrata Patel",
+      "facilityId": "SC-1",
+      "fromDate": "2026-07-05",
+      "toDate": "2026-07-05",
+      "reason": "Dental equipment maintenance block",
+      "status": "approved"
+    }
+  ],
+  "tests": [
+    {
+      "id": "test-1",
+      "facilityId": "SC-1",
+      "name": "Complete Blood Count (CBC)",
+      "category": "Hematology",
+      "availability": "available",
+      "turnaroundTime": "4 hours",
+      "equipmentStatus": "operational",
+      "sampleCount": 3
+    },
+    {
+      "id": "test-2",
+      "facilityId": "SC-1",
+      "name": "Random Blood Sugar (RBS)",
+      "category": "Biochemistry",
+      "availability": "available",
+      "turnaroundTime": "30 mins",
+      "equipmentStatus": "operational",
+      "sampleCount": 5
+    },
+    {
+      "id": "test-3",
+      "facilityId": "SC-1",
+      "name": "Electrocardiogram (ECG)",
+      "category": "Cardiology",
+      "availability": "unavailable",
+      "turnaroundTime": "1 hour",
+      "equipmentStatus": "down",
+      "sampleCount": 0
+    },
+    {
+      "id": "test-4",
+      "facilityId": "CHC-1",
+      "name": "Ultrasound Pelvis",
+      "category": "Radiology",
+      "availability": "available",
+      "turnaroundTime": "2 hours",
+      "equipmentStatus": "operational",
+      "sampleCount": 8
+    }
+  ],
+  "labSamples": [
+    {
+      "id": "smpl-1783240709624",
+      "patientId": "pat-1",
+      "patientName": "Ram Sahoo",
+      "facilityId": "SC-1",
+      "testId": "test-1",
+      "testName": "Complete Blood Count (CBC)",
+      "collectedAt": "2026-07-05T08:38:29.624Z",
+      "status": "collected"
+    },
+    {
+      "id": "smpl-1",
+      "patientId": "pat-1",
+      "patientName": "Ram Sahoo",
+      "facilityId": "SC-1",
+      "testId": "test-2",
+      "testName": "Random Blood Sugar (RBS)",
+      "collectedAt": "2026-07-05T07:33:54.187Z",
+      "status": "completed",
+      "result": "142 mg/dL (Post-prandial)"
+    },
+    {
+      "id": "smpl-2",
+      "patientId": "pat-2",
+      "patientName": "Priya Mishra",
+      "facilityId": "SC-1",
+      "testId": "test-1",
+      "testName": "Complete Blood Count (CBC)",
+      "collectedAt": "2026-07-05T08:03:54.187Z",
+      "status": "processing"
+    }
+  ],
+  "movements": [
+    {
+      "id": "MV-1783242451692-inv-3",
+      "facilityId": "SC-1",
+      "medicineId": "inv-3",
+      "medicineName": "ORS Packets",
+      "type": "ADDITION",
+      "quantity": 300,
+      "timestamp": "2026-07-05T09:07:31.692Z",
+      "notes": "AI restock order completed"
+    },
+    {
+      "id": "MV-1783242451692-inv-2",
+      "facilityId": "SC-1",
+      "medicineId": "inv-2",
+      "medicineName": "Amoxicillin 250mg",
+      "type": "ADDITION",
+      "quantity": 200,
+      "timestamp": "2026-07-05T09:07:31.692Z",
+      "notes": "AI restock order completed"
+    },
+    {
+      "id": "MV-1783242451692-inv-1",
+      "facilityId": "SC-1",
+      "medicineId": "inv-1",
+      "medicineName": "Paracetamol 500mg",
+      "type": "ADDITION",
+      "quantity": 500,
+      "timestamp": "2026-07-05T09:07:31.692Z",
+      "notes": "AI restock order completed"
+    },
+    {
+      "id": "MV-1783240646772",
+      "facilityId": "SC-1",
+      "medicineId": "inv-1",
+      "medicineName": "Paracetamol 500mg",
+      "type": "ADDITION",
+      "quantity": 50,
+      "timestamp": "2026-07-05T08:37:26.772Z",
+      "notes": "Routine restock audit"
+    },
+    {
+      "id": "mv-1",
+      "facilityId": "SC-1",
+      "medicineId": "inv-1",
+      "medicineName": "Paracetamol 500mg",
+      "type": "REMOVAL",
+      "quantity": -50,
+      "timestamp": "2026-07-05T06:33:54.187Z",
+      "notes": "Issued to outpatient clinic"
+    }
+  ],
+  "users": [
+    {
+      "id": "user-1783242188397",
+      "name": "Test Admin",
+      "email": "admin@test.com",
+      "passwordHash": "$2b$10$noZ1PSfpjirfTmxBgMT/9.RwMEf/BA5tGvX6a8LYK0rI5jcyGAuT.",
+      "role": "Admin"
+    },
+    {
+      "id": "user-1783242263598",
+      "name": "Test Admin",
+      "email": "admintest@test.com",
+      "passwordHash": "$2b$10$Ut7qtTwI6NaqpoCvnKmeGu7PjaewYbBVmwN7.u/NxAMuwZaQ3t2gG",
+      "role": "Admin"
+    },
+    {
+      "id": "user-1783242384167",
+      "name": "Karan ",
+      "email": "karankailashrathod9765@gmail.com",
+      "passwordHash": "$2b$10$9HgjfOJ1IPhp74TI4yj2ZuJ40kNLvgI80lpVtNhyMkL6OEvryaJwK",
+      "role": "PHC-Staff"
+    }
+  ]
+}

@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Home, 
-  Users, 
-  Activity, 
-  Building2, 
-  BarChart3, 
-  Settings, 
-  Search, 
-  Bell, 
-  Menu, 
-  ChevronDown, 
-  ChevronRight, 
-  ShieldAlert, 
-  LogOut, 
-  Heart, 
+import { useNavigate } from 'react-router-dom';
+import {
+  Home,
+  Users,
+  Activity,
+  Building2,
+  BarChart3,
+  Settings,
+  Search,
+  Bell,
+  Menu,
+  ChevronDown,
+  ChevronRight,
+  ShieldAlert,
+  LogOut,
+  Heart,
   Keyboard,
   X,
   FileText,
-  AlertOctagon
+  AlertOctagon,
+  Package,
+  Bed,
+  FlaskConical,
+  UserCheck,
+  ClipboardList
 } from 'lucide-react';
 import { EmergencyAlert, Facility, TriageResult } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -31,20 +38,28 @@ interface MainLayoutProps {
   onUpdateAlertStatus: (id: string, status: EmergencyAlert['status']) => void;
 }
 
-export default function MainLayout({ 
-  children, 
-  activeTab, 
-  setActiveTab, 
-  alerts, 
+export default function MainLayout({
+  children,
+  activeTab,
+  setActiveTab,
+  alerts,
   facilities,
   triageRecords,
-  onUpdateAlertStatus 
+  onUpdateAlertStatus
 }: MainLayoutProps) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleLogout = async () => {
+    setProfileOpen(false);
+    await logout();
+    navigate('/');
+  };
 
   // Critical alerts unread count
   const unreadAlerts = alerts.filter(a => a.status === 'PENDING' || a.status === 'ACKNOWLEDGED');
@@ -82,12 +97,17 @@ export default function MainLayout({
   };
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'patients', label: 'Patient Management', icon: Users },
-    { id: 'triage', label: 'Triage Console', icon: Activity, isPriority: true },
-    { id: 'resources', label: 'Resource Locator', icon: Building2 },
-    { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'dashboard', label: 'Mission Control', icon: Home },
+    { id: 'triage', label: 'Triage', icon: Activity, isPriority: true },
+    { id: 'resources', label: 'Resources', icon: Building2 },
+    { id: 'workers', label: 'Workers', icon: ClipboardList },
+    { id: 'inventory', label: 'INVENTORY', icon: Package },
+    { id: 'patients', label: 'PATIENTS', icon: Users },
+    { id: 'beds', label: 'BEDS', icon: Bed },
+    { id: 'doctors', label: 'DOCTORS', icon: UserCheck },
+    { id: 'tests', label: 'TESTS', icon: FlaskConical },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'admin', label: 'ADMIN', icon: ShieldAlert }
   ];
 
   return (
@@ -228,24 +248,26 @@ export default function MainLayout({
                 }}
                 className="flex items-center gap-2 p-1.5 hover:bg-slate-100 rounded-lg transition"
               >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div className="w-8 h-8 rounded-full bg-slate-200 text-medblue font-bold text-xs flex items-center justify-center border border-slate-300">
-                  A-1
+                  {user ? user.name.charAt(0).toUpperCase() : 'A'}
                 </div>
                 <div className="text-left hidden lg:block leading-none">
-                  <p className="text-xs font-bold text-slate-800">ASHA_ID-401</p>
-                  <p className="text-[10px] text-slate-400 font-mono">Bhadrak Hub</p>
+                  <p className="text-xs font-bold text-slate-800">{user?.name || 'User'}</p>
+                  <p className="text-[10px] text-slate-400 font-mono">{user?.role || ''}</p>
                 </div>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+              </div>
               </button>
 
               {/* Profile dropdown panel */}
               {profileOpen && (
                 <div className="absolute right-0 mt-2.5 w-56 bg-white border border-slate-200 rounded-xl shadow-lg py-2 z-50 text-slate-800">
-                  <div className="px-4 py-2 border-b border-slate-100">
-                    <p className="text-xs text-slate-400 font-mono uppercase tracking-wider">Active Health Worker</p>
-                    <p className="text-sm font-bold text-slate-800">Rashmi Prava Mallick</p>
-                    <p className="text-[10px] text-slate-500 font-mono">ID: ASHA_ID-401</p>
-                  </div>
+              <div className="px-4 py-2 border-b border-slate-100">
+                <p className="text-xs text-slate-400 font-mono uppercase tracking-wider">Logged in as</p>
+                <p className="text-sm font-bold text-slate-800">{user?.name || 'User'}</p>
+                <p className="text-[10px] text-slate-500 font-mono">{user?.email}</p>
+              </div>
                   <div className="py-1">
                     <button 
                       onClick={() => { setActiveTab('settings'); setProfileOpen(false); }}
@@ -263,8 +285,8 @@ export default function MainLayout({
                     </button>
                   </div>
                   <div className="border-t border-slate-100 pt-1 mt-1">
-                    <button 
-                      onClick={() => alert('Secure signout is simulated for development purposes.')}
+                    <button
+                      onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center gap-2 font-medium"
                     >
                       <LogOut className="w-3.5 h-3.5" />
@@ -362,7 +384,7 @@ export default function MainLayout({
           }`}
         >
           <Home className="w-4 h-4" />
-          <span>Dashboard</span>
+          <span>Control</span>
         </button>
         <button 
           onClick={() => setActiveTab('triage')}
@@ -375,22 +397,22 @@ export default function MainLayout({
           <span className="absolute top-2 right-6 w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
         </button>
         <button 
-          onClick={() => setActiveTab('resources')}
+          onClick={() => setActiveTab('inventory')}
           className={`flex flex-col items-center justify-center gap-1 text-[11px] font-medium ${
-            activeTab === 'resources' ? 'text-medblue' : 'text-slate-500'
+            activeTab === 'inventory' ? 'text-medblue' : 'text-slate-500'
           }`}
         >
-          <Building2 className="w-4 h-4" />
-          <span>Facilities</span>
+          <Package className="w-4 h-4" />
+          <span>Inventory</span>
         </button>
         <button 
-          onClick={() => setActiveTab('patients')}
+          onClick={() => setActiveTab('admin')}
           className={`flex flex-col items-center justify-center gap-1 text-[11px] font-medium ${
-            activeTab === 'patients' ? 'text-medblue' : 'text-slate-500'
+            activeTab === 'admin' ? 'text-medblue' : 'text-slate-500'
           }`}
         >
-          <Users className="w-4 h-4" />
-          <span>Patients</span>
+          <ShieldAlert className="w-4 h-4" />
+          <span>Admin</span>
         </button>
       </div>
 
