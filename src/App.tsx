@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useSearchParams } 
 // Auth
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { apiFetch as globalApiFetch } from './utils/api';
+import { PrivateRoute } from './components/PrivateRoute';
 
 // Pages
 import LandingPage from './components/LandingPage';
@@ -33,20 +34,6 @@ import {
   DiagnosticTest, LabSample, RedistributionRecommendation, FacilityPerformance
 } from './types';
 import { UserX } from 'lucide-react';
-
-// ─── Protected Route Guard ───────────────────────────────────────────────────
-
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  // 🔬 DEMO MODE: Allow unrestricted access without checking user credentials
-  return <>{children}</>;
-}
-
-// ─── Public Route Guard (redirect to dashboard if already logged in) ─────────
-
-function PublicRoute({ children }: { children: React.ReactNode }) {
-  // 🔬 DEMO MODE: Allow unrestricted access to public/demo pages
-  return <>{children}</>;
-}
 
 // ─── Dashboard Shell ─────────────────────────────────────────────────────────
 
@@ -108,13 +95,6 @@ function DashboardShell() {
 
       const responses = await Promise.all(endpoints.map(ep => globalApiFetch(ep)));
 
-      // If we get a 401, our session expired — redirect to login
-      if (responses.some(r => r.status === 401)) {
-        await logout();
-        navigate('/login');
-        return;
-      }
-
       const failed = responses.filter(r => !r.ok);
       if (failed.length > 0) throw new Error(`${failed.length} API resources failed to load.`);
 
@@ -142,7 +122,6 @@ function DashboardShell() {
       method,
       body: body ? JSON.stringify(body) : undefined,
     });
-    if (res.status === 401) { await logout(); navigate('/login'); }
     return res;
   };
 
@@ -309,17 +288,17 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* Public / Demo */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/landing" element={<Navigate to="/" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
 
           {/* Protected (Demo Mode Allowed) */}
-          <Route path="/select-service" element={<ServiceSelection />} />
-          <Route path="/dashboard" element={<DashboardShell />} />
+          <Route path="/select-service" element={<PrivateRoute><ServiceSelection /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><DashboardShell /></PrivateRoute>} />
 
           {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

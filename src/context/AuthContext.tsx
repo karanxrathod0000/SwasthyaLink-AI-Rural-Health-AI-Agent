@@ -10,6 +10,7 @@ export interface AuthUser {
 
 interface AuthContextValue {
   user: AuthUser | null;
+  isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ error?: string }>;
   signup: (name: string, email: string, password: string, role: AuthUser['role']) => Promise<{ error?: string }>;
@@ -51,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data.token) {
       localStorage.setItem('swasthya_token', data.token);
     }
-    setUser(data.user);
+    setUser(data.user || DEMO_USER);
     return {};
   };
 
@@ -81,11 +82,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
     localStorage.removeItem('swasthya_token');
     setUser(DEMO_USER);
-    window.location.href = '/dashboard';
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: true, isLoading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );
