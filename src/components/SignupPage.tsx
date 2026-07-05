@@ -51,7 +51,7 @@ export default function SignupPage() {
     if (result.error) {
       setError(result.error);
     } else {
-      navigate('/select-service');
+      navigate('/dashboard');
     }
   };
 

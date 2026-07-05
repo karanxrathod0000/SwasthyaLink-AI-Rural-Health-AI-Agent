@@ -32,6 +32,7 @@ app.use(cookieParser());
 
 const PORT = 3000;
 const STORE_PATH = path.join(process.cwd(), 'data-store.json');
+const TMP_STORE_PATH = path.join('/tmp', 'data-store.json');
 
 // --- INITIAL DATASETS ---
 
@@ -238,6 +239,30 @@ interface User {
   role: 'Admin' | 'PHC-Staff' | 'ASHA-Worker';
 }
 
+const INITIAL_USERS: User[] = [
+  {
+    id: 'user-admin-demo',
+    name: 'Test Admin',
+    email: 'admin@test.com',
+    passwordHash: '$2b$10$noZ1PSfpjirfTmxBgMT/9.RwMEf/BA5tGvX6a8LYK0rI5jcyGAuT.', // test123456
+    role: 'Admin'
+  },
+  {
+    id: 'user-staff-demo',
+    name: 'CHO Officer',
+    email: 'cho@test.com',
+    passwordHash: '$2b$10$noZ1PSfpjirfTmxBgMT/9.RwMEf/BA5tGvX6a8LYK0rI5jcyGAuT.',
+    role: 'PHC-Staff'
+  },
+  {
+    id: 'user-asha-demo',
+    name: 'ASHA Worker',
+    email: 'asha@test.com',
+    passwordHash: '$2b$10$noZ1PSfpjirfTmxBgMT/9.RwMEf/BA5tGvX6a8LYK0rI5jcyGAuT.',
+    role: 'ASHA-Worker'
+  }
+];
+
 interface DataStore {
   facilities: typeof INITIAL_FACILITIES;
   logs: typeof INITIAL_LOGS;
@@ -264,8 +289,9 @@ let cachedDB: DataStore | null = null;
 function getDB(): DataStore {
   if (cachedDB) return cachedDB;
   try {
-    if (fs.existsSync(STORE_PATH)) {
-      const data = fs.readFileSync(STORE_PATH, 'utf-8');
+    const pathToRead = fs.existsSync(TMP_STORE_PATH) ? TMP_STORE_PATH : (fs.existsSync(STORE_PATH) ? STORE_PATH : null);
+    if (pathToRead) {
+      const data = fs.readFileSync(pathToRead, 'utf-8');
       const db = JSON.parse(data);
       // Ensure new tables are initialized if reading an older file
       if (!db.inventory) db.inventory = INITIAL_INVENTORY;
@@ -277,7 +303,7 @@ function getDB(): DataStore {
       if (!db.tests) db.tests = INITIAL_TESTS;
       if (!db.labSamples) db.labSamples = INITIAL_LAB_SAMPLES;
       if (!db.movements) db.movements = INITIAL_MOVEMENTS;
-      if (!db.users) db.users = [];
+      if (!db.users || db.users.length === 0) db.users = INITIAL_USERS;
       cachedDB = db;
       return db;
     }
@@ -299,7 +325,7 @@ function getDB(): DataStore {
     tests: INITIAL_TESTS,
     labSamples: INITIAL_LAB_SAMPLES,
     movements: INITIAL_MOVEMENTS,
-    users: []
+    users: INITIAL_USERS
   };
   cachedDB = defaultDB;
   saveDB(defaultDB);
@@ -309,6 +335,9 @@ function getDB(): DataStore {
 function saveDB(db: DataStore) {
   cachedDB = db;
   try {
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+      try { fs.writeFileSync(TMP_STORE_PATH, JSON.stringify(db, null, 2), 'utf-8'); } catch (e) {}
+    }
     fs.writeFileSync(STORE_PATH, JSON.stringify(db, null, 2), 'utf-8');
   } catch (err) {
     console.error('Error writing DB', err);
@@ -321,7 +350,7 @@ getDB();
 // --- AUTH MIDDLEWARE (defined before routes) ---
 
 const JWT_SECRET = process.env.JWT_SECRET || 'swasthyalink_dev_secret';
-const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_PROD = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
 
 const authenticate = (req: any, res: any, next: any) => {
   const token = req.cookies?.token || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
@@ -352,8 +381,9 @@ app.post('/api/auth/register', async (req: any, res: any) => {
   const passwordHash = await bcrypt.hash(password, 10);
   const newUser = { id: `user-${Date.now()}`, name, email, passwordHash, role };
   db.users.push(newUser);
-  const token = jwt.sign({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }, JWT_SECRET, { expiresIn: '8h' });
-  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 });
+  saveDB(db);
+  const token = jwt.sign({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }, JWT_SECRET, { expiresIn: '7d' });
+  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
   res.status(201).json({ message: 'User registered successfully', token, user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } });
 });
 
@@ -365,8 +395,8 @@ app.post('/api/auth/login', async (req: any, res: any) => {
   if (!user) return res.status(401).json({ error: 'Invalid credentials' });
   const match = await bcrypt.compare(password, user.passwordHash);
   if (!match) return res.status(401).json({ error: 'Invalid credentials' });
-  const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '8h' });
-  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 });
+  const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+  res.cookie('token', token, { httpOnly: true, secure: IS_PROD, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
   res.json({ message: 'Logged in', token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 

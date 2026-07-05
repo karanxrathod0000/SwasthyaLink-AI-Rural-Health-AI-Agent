@@ -144,6 +144,26 @@
   ],
   "triageRecords": [
     {
+      "id": "TRI-1783264967389",
+      "patientAge": 34,
+      "patientGender": "M",
+      "pregnancyStatus": "NOT_APPLICABLE",
+      "symptoms": "Cough, Chest Pain, Headache, Diarrhea",
+      "vitals": {
+        "pulse": 75,
+        "temp": 98.6,
+        "bloodPressure": "120/80",
+        "respiratoryRate": 16,
+        "oxygenSat": 98
+      },
+      "category": "MEDIUM",
+      "clinicalReasoning": "Standard fallback logic used. Patient exhibits symptomatic parameters that require scheduled evaluation.",
+      "recommendedAction": "Schedule a visit to the local SubCenter. Monitor vitals daily. Report any escalation of symptoms immediately.",
+      "timestamp": "2026-07-05T15:22:47.389Z",
+      "allocatedFacilityId": "SC-1",
+      "isSyncedToFirebase": true
+    },
+    {
       "id": "TRI-1783243444285",
       "patientAge": 30,
       "patientGender": "F",
@@ -415,7 +435,7 @@
       "department": "general",
       "visitType": "OPD",
       "triagePriority": "routine",
-      "status": "waiting"
+      "status": "with_doctor"
     },
     {
       "id": "pat-1",

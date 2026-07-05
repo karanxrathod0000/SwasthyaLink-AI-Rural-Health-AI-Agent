@@ -73,15 +73,13 @@ function DashboardShell() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Read tab from URL ?tab= param; fall back to 'dashboard'
+  // Read tab directly from URL ?tab= param; fall back to 'dashboard'
   const tabFromUrl = searchParams.get('tab');
-  const initialTab = tabFromUrl && VALID_TABS.includes(tabFromUrl) ? tabFromUrl : 'dashboard';
-  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  const activeTab = tabFromUrl && VALID_TABS.includes(tabFromUrl) ? tabFromUrl : 'dashboard';
 
-  // When user switches tabs via sidebar, clear the URL param to keep URL clean
+  // When user switches tabs via sidebar or anywhere else, update the URL query param so it persists and is shareable
   const handleSetActiveTab = (tab: string) => {
-    setActiveTab(tab);
-    if (searchParams.has('tab')) setSearchParams({}, { replace: true });
+    setSearchParams({ tab }, { replace: true });
   };
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [logs, setLogs] = useState<AttendanceLog[]>([]);
@@ -268,7 +266,7 @@ function DashboardShell() {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardTab facilities={facilities} alerts={alerts} triageRecords={triageRecords} logs={logs} setActiveTab={setActiveTab} onUpdateAlertStatus={handleUpdateAlertStatus} triggerEmergencyAlert={triggerEmergencyAlert} openNewPatientIntake={() => setActiveTab('triage')} />;
+        return <DashboardTab facilities={facilities} alerts={alerts} triageRecords={triageRecords} logs={logs} setActiveTab={handleSetActiveTab} onUpdateAlertStatus={handleUpdateAlertStatus} triggerEmergencyAlert={triggerEmergencyAlert} openNewPatientIntake={() => handleSetActiveTab('triage')} />;
       case 'triage':
         return <TriageConsoleTab facilities={facilities} onTriageCreated={handleTriageCreated} />;
       case 'resources':

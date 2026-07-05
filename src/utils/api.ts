@@ -21,5 +21,8 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}): Pro
     credentials: 'include',
   };
 
-  return fetch(endpoint, config);
+  const API_BASE = import.meta.env.VITE_API_URL || '';
+  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+
+  return fetch(url, config);
 }
