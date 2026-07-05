@@ -144,6 +144,46 @@
   ],
   "triageRecords": [
     {
+      "id": "TRI-1783243444285",
+      "patientAge": 30,
+      "patientGender": "F",
+      "pregnancyStatus": "NO",
+      "symptoms": "Cough, Chest Pain",
+      "vitals": {
+        "pulse": 75,
+        "temp": 98.6,
+        "bloodPressure": "120/80",
+        "respiratoryRate": 16,
+        "oxygenSat": 98
+      },
+      "category": "MEDIUM",
+      "clinicalReasoning": "Standard fallback logic used. Patient exhibits symptomatic parameters that require scheduled evaluation.",
+      "recommendedAction": "Schedule a visit to the local SubCenter. Monitor vitals daily. Report any escalation of symptoms immediately.",
+      "timestamp": "2026-07-05T09:24:04.286Z",
+      "allocatedFacilityId": "SC-1",
+      "isSyncedToFirebase": true
+    },
+    {
+      "id": "TRI-1783243137140",
+      "patientAge": 34,
+      "patientGender": "M",
+      "pregnancyStatus": "NOT_APPLICABLE",
+      "symptoms": "Cough, Chest Pain, Headache",
+      "vitals": {
+        "pulse": 75,
+        "temp": 98.6,
+        "bloodPressure": "120/80",
+        "respiratoryRate": 16,
+        "oxygenSat": 98
+      },
+      "category": "MEDIUM",
+      "clinicalReasoning": "Standard fallback logic used. Patient exhibits symptomatic parameters that require scheduled evaluation.",
+      "recommendedAction": "Schedule a visit to the local SubCenter. Monitor vitals daily. Report any escalation of symptoms immediately.",
+      "timestamp": "2026-07-05T09:18:57.140Z",
+      "allocatedFacilityId": "SC-1",
+      "isSyncedToFirebase": true
+    },
+    {
       "id": "TRI-1783242437519",
       "patientAge": 30,
       "patientGender": "F",
@@ -648,6 +688,16 @@
     }
   ],
   "movements": [
+    {
+      "id": "MV-1783243489484",
+      "facilityId": "SC-1",
+      "medicineId": "inv-1",
+      "medicineName": "Paracetamol 500mg",
+      "type": "ADDITION",
+      "quantity": 50,
+      "timestamp": "2026-07-05T09:24:49.484Z",
+      "notes": "Routine restock audit"
+    },
     {
       "id": "MV-1783242451692-inv-3",
       "facilityId": "SC-1",

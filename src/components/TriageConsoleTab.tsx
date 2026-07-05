@@ -89,6 +89,7 @@ export default function TriageConsoleTab({ facilities, onTriageCreated }: Triage
     try {
       const response = await fetch('/api/triage', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           symptoms,

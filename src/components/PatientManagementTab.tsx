@@ -61,6 +61,7 @@ export default function PatientManagementTab({
     try {
       const response = await fetch('/api/logs/validate', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           workerId,
