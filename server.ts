@@ -258,8 +258,11 @@ interface DataStore {
   users: User[];
 }
 
+let cachedDB: DataStore | null = null;
+
 // Load DB from file or initialize
 function getDB(): DataStore {
+  if (cachedDB) return cachedDB;
   try {
     if (fs.existsSync(STORE_PATH)) {
       const data = fs.readFileSync(STORE_PATH, 'utf-8');
@@ -275,6 +278,7 @@ function getDB(): DataStore {
       if (!db.labSamples) db.labSamples = INITIAL_LAB_SAMPLES;
       if (!db.movements) db.movements = INITIAL_MOVEMENTS;
       if (!db.users) db.users = [];
+      cachedDB = db;
       return db;
     }
   } catch (err) {
@@ -297,11 +301,13 @@ function getDB(): DataStore {
     movements: INITIAL_MOVEMENTS,
     users: []
   };
+  cachedDB = defaultDB;
   saveDB(defaultDB);
   return defaultDB;
 }
 
 function saveDB(db: DataStore) {
+  cachedDB = db;
   try {
     fs.writeFileSync(STORE_PATH, JSON.stringify(db, null, 2), 'utf-8');
   } catch (err) {
@@ -1306,4 +1312,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
